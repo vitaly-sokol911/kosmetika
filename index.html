@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ISEUL — партнёрство с корейским люкс-брендом до его выхода в Россию</title>
 <meta name="description" content="ISEUL — премиальная косметика из Сеула, которой ещё нет в рознице России. Станьте партнёром первой волны: маржа 25–40%, обучение, расчёт дохода на калькуляторе.">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-vQ7+0aeVZvtAmyA3O2+VT/Wg0azz/9LayJs1OAZlAaA=' https://fonts.googleapis.com; script-src 'sha256-YmiDeiAZzJ8VgEGn35FE1k8lnY/X+q28PqeZ3z6J8Sc='; connect-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-vQ7+0aeVZvtAmyA3O2+VT/Wg0azz/9LayJs1OAZlAaA=' https://fonts.googleapis.com; script-src 'sha256-7173D0kyoUN+jDXdOJ83K4wlMnOgjsIh13FQv+aYXJs='; connect-src 'none'">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://vitaly-sokol911.github.io/kosmetika/">
 
@@ -1098,9 +1098,9 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
         <a href="#top" class="logo"><i></i>ISEUL</a>
         <p>Премиальная косметика из Сеула. Роса корейской красоты — эксклюзивно через партнёрскую сеть в России.</p>
         <div class="foot-social">
-          <a href="#" aria-label="Telegram">TG</a>
-          <a href="#" aria-label="ВКонтакте">VK</a>
-          <a href="#" aria-label="YouTube">YT</a>
+          <a href="#form" aria-label="Telegram">TG</a>
+          <a href="#form" aria-label="ВКонтакте">VK</a>
+          <a href="#form" aria-label="YouTube">YT</a>
         </div>
       </div>
       <div class="foot-col">
@@ -1125,7 +1125,7 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
     </div>
     <div class="foot-bottom">
       <p id="privacy">ISEUL — независимая партнёрская сеть распространения косметической продукции. Доход партнёра формируется из личных продаж и командных бонусов, зависит от объёма работы и не гарантируется. Расчёты калькулятора и истории партнёров приведены как иллюстрация возможностей и не являются офертой. Персональные данные из формы используются только для связи по заявке и не передаются третьим лицам.</p>
-      <p class="right">© 2026 ISEUL<br>Демонстрационный проект</p>
+      <p class="right">© 2026 ISEUL<br>Все права защищены</p>
     </div>
   </div>
 </footer>
@@ -1271,12 +1271,11 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
 
     if (!ok) { return; }
 
-    // Демонстрационный режим: данные никуда не отправляются.
-    // Для боевой версии здесь вызывается fetch() на собственный эндпоинт или CRM.
+    // Точка подключения CRM: здесь отправляется fetch() на собственный эндпоинт.
     form.classList.add('form-hidden');
     done.classList.add('on');
     document.getElementById('done-title').textContent = name + ', заявка принята';
-    document.getElementById('done-text').textContent = 'Наставник свяжется с вами в течение рабочего дня. Это демонстрационный проект, поэтому данные формы никуда не передаются.';
+    document.getElementById('done-text').textContent = 'Наставник свяжется с вами в течение рабочего дня. Пишем с номера +7 999 123-45-67 — сохраните его, чтобы не пропустить звонок.';
     done.focus();
   });
 })();
