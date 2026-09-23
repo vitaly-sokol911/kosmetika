@@ -7,7 +7,7 @@
 <meta name="description" content="ISEUL — премиальная косметика из Сеула, которой ещё нет в рознице России. Станьте партнёром первой волны: маржа 25–40%, обучение, расчёт дохода на калькуляторе.">
 <meta name="robots" content="noindex, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-M5Bn1sgFQ63HoAxGmgsG91NnDjqJl5dK0EkpgApM9Rw=' https://fonts.googleapis.com; script-src 'sha256-oylB9jjA+dKy+tNi7hjBVxilOuof1g+he370byLi3QE='; connect-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-M5Bn1sgFQ63HoAxGmgsG91NnDjqJl5dK0EkpgApM9Rw=' https://fonts.googleapis.com; script-src 'sha256-08wZSwlMMmlc6vYLR0nZQC2/hvaM9sfch+FGANxbpBk='; connect-src 'none'">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://vitaly-sokol911.github.io/kosmetika/">
 
@@ -1127,8 +1127,8 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
       </div>
       <div class="foot-col">
         <h5>Контакты</h5>
-        <button type="button" class="foot-fake" data-toast="Письмо отправлено — ответим в течение рабочего дня">partners@iseul-beauty.ru</button>
-        <button type="button" class="foot-fake" data-toast="Заявка на звонок принята — перезвоним в течение часа">+7 999 123-45-67</button>
+        <button type="button" class="foot-fake" data-copy="partners@iseul-beauty.ru" data-label="Email">partners@iseul-beauty.ru</button>
+        <button type="button" class="foot-fake" data-copy="+7 999 123-45-67" data-label="Номер">+7 999 123-45-67</button>
         <a href="#form">Оставить заявку</a>
       </div>
     </div>
@@ -1249,12 +1249,37 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
   var toast = document.getElementById('toast');
   var toastText = document.getElementById('toast-text');
   var toastTimer = null;
+  var showToast = function (text) {
+    toastText.textContent = text;
+    toast.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove('on'); }, 3600);
+  };
+  var fallbackCopy = function (value) {
+    var tmp = document.createElement('textarea');
+    tmp.value = value;
+    tmp.style.position = 'fixed';
+    tmp.style.left = '-9999px';
+    document.body.appendChild(tmp);
+    tmp.select();
+    try { document.execCommand('copy'); } catch (err) { /* буфер недоступен — просто закрываем поле */ }
+    document.body.removeChild(tmp);
+  };
   document.querySelectorAll('.foot-fake').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      toastText.textContent = btn.getAttribute('data-toast');
-      toast.classList.add('on');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(function () { toast.classList.remove('on'); }, 3600);
+      var value = btn.getAttribute('data-copy');
+      var label = btn.getAttribute('data-label');
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(value).then(function () {
+          showToast(label + ' скопирован — вставьте в звонилку или почту');
+        }).catch(function () {
+          fallbackCopy(value);
+          showToast(label + ' скопирован — вставьте в звонилку или почту');
+        });
+      } else {
+        fallbackCopy(value);
+        showToast(label + ' скопирован — вставьте в звонилку или почту');
+      }
     });
   });
 
