@@ -7,7 +7,7 @@
 <meta name="description" content="ISEUL — премиальная косметика из Сеула, которой ещё нет в рознице России. Станьте партнёром первой волны: маржа 25–40%, обучение, расчёт дохода на калькуляторе.">
 <meta name="robots" content="noindex, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-vQ7+0aeVZvtAmyA3O2+VT/Wg0azz/9LayJs1OAZlAaA=' https://fonts.googleapis.com; script-src 'sha256-7173D0kyoUN+jDXdOJ83K4wlMnOgjsIh13FQv+aYXJs='; connect-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-M5Bn1sgFQ63HoAxGmgsG91NnDjqJl5dK0EkpgApM9Rw=' https://fonts.googleapis.com; script-src 'sha256-oylB9jjA+dKy+tNi7hjBVxilOuof1g+he370byLi3QE='; connect-src 'none'">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://vitaly-sokol911.github.io/kosmetika/">
 
@@ -402,6 +402,15 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
 .foot-social a:hover{background:var(--ink);color:var(--porcelain);border-color:var(--ink)}
 .foot-col h5{font-size:.68rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:16px}
 .foot-col a{display:block;padding:5px 0;font-size:.92rem;transition:color .2s}
+.foot-col button.foot-fake{display:block;width:100%;text-align:left;padding:5px 0;font-size:.92rem;font-family:var(--sans);color:inherit;background:none;border:none;cursor:pointer;transition:color .2s}
+
+.toast{position:fixed;left:50%;bottom:28px;z-index:200;transform:translateX(-50%) translateY(140%);
+  display:flex;align-items:center;gap:12px;max-width:min(420px,calc(100vw - 40px));
+  background:var(--ink);color:var(--porcelain);padding:16px 22px;border-left:2px solid var(--gold);
+  box-shadow:var(--shadow-m);transition:transform .4s var(--ease);font-size:.92rem}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.toast i{width:20px;height:20px;flex:none;border:1px solid var(--gold);border-radius:50%;position:relative}
+.toast i::after{content:"";position:absolute;top:7px;left:6px;width:7px;height:4px;border-left:1.4px solid var(--gold);border-bottom:1.4px solid var(--gold);transform:rotate(-45deg)}
 .foot-col a:hover{color:var(--gold-deep)}
 .foot-bottom{padding-top:26px;border-top:1px solid var(--line);display:grid;grid-template-columns:1.8fr 1fr;gap:20px;font-size:.78rem;line-height:1.6;color:var(--ink-faint)}
 .foot-bottom .right{text-align:right}
@@ -1118,8 +1127,8 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
       </div>
       <div class="foot-col">
         <h5>Контакты</h5>
-        <a href="mailto:partners@iseul-beauty.ru">partners@iseul-beauty.ru</a>
-        <a href="tel:+79991234567">+7 999 123-45-67</a>
+        <button type="button" class="foot-fake" data-toast="Письмо отправлено — ответим в течение рабочего дня">partners@iseul-beauty.ru</button>
+        <button type="button" class="foot-fake" data-toast="Заявка на звонок принята — перезвоним в течение часа">+7 999 123-45-67</button>
         <a href="#form">Оставить заявку</a>
       </div>
     </div>
@@ -1129,6 +1138,11 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
     </div>
   </div>
 </footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <i aria-hidden="true"></i>
+  <span id="toast-text"></span>
+</div>
 
 <div class="dock" id="dock">
   <a href="#calc" class="btn btn-line btn-sm">Посчитать доход</a>
@@ -1231,6 +1245,18 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
     input.addEventListener('input', recalc);
   });
   recalc();
+
+  var toast = document.getElementById('toast');
+  var toastText = document.getElementById('toast-text');
+  var toastTimer = null;
+  document.querySelectorAll('.foot-fake').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      toastText.textContent = btn.getAttribute('data-toast');
+      toast.classList.add('on');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('on'); }, 3600);
+    });
+  });
 
   var form = document.getElementById('lead-form');
   var done = document.getElementById('form-done');
