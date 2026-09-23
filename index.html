@@ -7,7 +7,7 @@
 <meta name="description" content="ISEUL — премиальная косметика из Сеула, которой ещё нет в рознице России. Станьте партнёром первой волны: маржа 25–40%, обучение, расчёт дохода на калькуляторе.">
 <meta name="robots" content="noindex, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-M5Bn1sgFQ63HoAxGmgsG91NnDjqJl5dK0EkpgApM9Rw=' https://fonts.googleapis.com; script-src 'sha256-08wZSwlMMmlc6vYLR0nZQC2/hvaM9sfch+FGANxbpBk='; connect-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; img-src 'self' https://images.unsplash.com https://plus.unsplash.com; font-src https://fonts.gstatic.com; style-src 'sha256-1M1KpCPbhCu0kQNWVBnAU+Mmly8NDZIFH8A8ebpshDg=' https://fonts.googleapis.com; script-src 'sha256-+6tzELAzIbM+gwEji3pgbZHvq5TDTDYguL2e5DB5BPs='; connect-src 'none'">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://vitaly-sokol911.github.io/kosmetika/">
 
@@ -403,6 +403,21 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
 .foot-col h5{font-size:.68rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:16px}
 .foot-col a{display:block;padding:5px 0;font-size:.92rem;transition:color .2s}
 .foot-col button.foot-fake{display:block;width:100%;text-align:left;padding:5px 0;font-size:.92rem;font-family:var(--sans);color:inherit;background:none;border:none;cursor:pointer;transition:color .2s}
+
+.modal-overlay{position:fixed;inset:0;z-index:250;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(36,31,28,.55);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility 0s linear .3s}
+.modal-overlay.on{opacity:1;visibility:visible;transition:opacity .3s var(--ease)}
+.modal-box{position:relative;width:100%;max-width:420px;background:var(--white);border-top:2px solid var(--gold);padding:clamp(28px,4vw,38px);transform:translateY(14px) scale(.98);transition:transform .3s var(--ease);max-height:90vh;overflow-y:auto}
+.modal-overlay.on .modal-box{transform:translateY(0) scale(1)}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);transition:color .2s}
+.modal-close:hover{color:var(--ink)}
+.modal-close i{position:relative;width:14px;height:14px}
+.modal-close i::before,.modal-close i::after{content:"";position:absolute;top:6.5px;left:0;width:14px;height:1.5px;background:currentColor}
+.modal-close i::before{transform:rotate(45deg)}
+.modal-close i::after{transform:rotate(-45deg)}
+.modal-box h3{margin-bottom:8px;padding-right:24px}
+.modal-sub{font-size:.92rem;margin-bottom:22px}
+.modal-fine{font-size:.76rem;color:var(--ink-faint);margin:-6px 0 18px;line-height:1.5}
+.modal-fine a{color:var(--ink);border-bottom:1px solid var(--line-gold)}
 
 .toast{position:fixed;left:50%;bottom:28px;z-index:200;transform:translateX(-50%) translateY(140%);
   display:flex;align-items:center;gap:12px;max-width:min(420px,calc(100vw - 40px));
@@ -1127,8 +1142,8 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
       </div>
       <div class="foot-col">
         <h5>Контакты</h5>
-        <button type="button" class="foot-fake" data-copy="partners@iseul-beauty.ru" data-label="Email">partners@iseul-beauty.ru</button>
-        <button type="button" class="foot-fake" data-copy="+7 999 123-45-67" data-label="Номер">+7 999 123-45-67</button>
+        <button type="button" class="foot-fake" data-modal="email">partners@iseul-beauty.ru</button>
+        <button type="button" class="foot-fake" data-modal="phone">+7 999 123-45-67</button>
         <a href="#form">Оставить заявку</a>
       </div>
     </div>
@@ -1138,6 +1153,39 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
     </div>
   </div>
 </footer>
+
+<div class="modal-overlay" id="quickOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="quickTitle">
+    <button type="button" class="modal-close" id="quickClose" aria-label="Закрыть"><i aria-hidden="true"></i></button>
+    <div id="quickFormWrap">
+      <h3 id="quickTitle">Написать нам</h3>
+      <p class="modal-sub" id="quickSub">Ответим в течение рабочего дня.</p>
+      <form id="quickForm" novalidate>
+        <div class="field">
+          <label for="q-name">Как к вам обращаться</label>
+          <input type="text" id="q-name" name="name" autocomplete="name" maxlength="60" required>
+          <span class="field-err" id="q-name-err"></span>
+        </div>
+        <div class="field">
+          <label for="q-contact" id="q-contact-label">Ваш email</label>
+          <input type="text" id="q-contact" name="contact" maxlength="60" required>
+          <span class="field-err" id="q-contact-err"></span>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="q-extra">Не заполняйте это поле</label>
+          <input type="text" id="q-extra" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="modal-fine">Нажимая «Отправить», соглашаетесь с <a href="#privacy">политикой конфиденциальности</a>.</p>
+        <button type="submit" class="btn btn-gold btn-wide">Отправить</button>
+      </form>
+    </div>
+    <div class="form-done" id="quickDone" role="status" aria-live="polite">
+      <i aria-hidden="true"></i>
+      <h3 id="quickDoneTitle">Готово</h3>
+      <p id="quickDoneText"></p>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite">
   <i aria-hidden="true"></i>
@@ -1246,41 +1294,88 @@ footer{padding:clamp(56px,6vw,84px) 0 32px;border-top:1px solid var(--line)}
   });
   recalc();
 
-  var toast = document.getElementById('toast');
-  var toastText = document.getElementById('toast-text');
-  var toastTimer = null;
-  var showToast = function (text) {
-    toastText.textContent = text;
-    toast.classList.add('on');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toast.classList.remove('on'); }, 3600);
+  var QUICK = {
+    email: {
+      title: 'Написать нам',
+      sub: 'Ответим в течение рабочего дня.',
+      label: 'Ваш email',
+      placeholder: 'you@example.com',
+      inputType: 'email',
+      errText: 'Введите email вида you@example.com',
+      isValid: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); },
+      doneTitle: 'Сообщение отправлено',
+      doneText: function (name, value) { return name + ', ваше сообщение отправлено. Ответим на ' + value + ' в течение рабочего дня.'; }
+    },
+    phone: {
+      title: 'Заказать звонок',
+      sub: 'Перезвоним в удобное время.',
+      label: 'Ваш телефон',
+      placeholder: '+7 900 000-00-00',
+      inputType: 'tel',
+      errText: 'Введите номер телефона',
+      isValid: function (v) { return v.replace(/\D/g, '').length >= 10; },
+      doneTitle: 'Заявка принята',
+      doneText: function (name, value) { return name + ', заявка принята. Перезвоним на ' + value + ' в течение часа.'; }
+    }
   };
-  var fallbackCopy = function (value) {
-    var tmp = document.createElement('textarea');
-    tmp.value = value;
-    tmp.style.position = 'fixed';
-    tmp.style.left = '-9999px';
-    document.body.appendChild(tmp);
-    tmp.select();
-    try { document.execCommand('copy'); } catch (err) { /* буфер недоступен — просто закрываем поле */ }
-    document.body.removeChild(tmp);
+
+  var overlay = document.getElementById('quickOverlay');
+  var quickFormWrap = document.getElementById('quickFormWrap');
+  var quickDone = document.getElementById('quickDone');
+  var quickForm = document.getElementById('quickForm');
+  var qName = document.getElementById('q-name');
+  var qContact = document.getElementById('q-contact');
+  var qContactLabel = document.getElementById('q-contact-label');
+  var qTitle = document.getElementById('quickTitle');
+  var qSub = document.getElementById('quickSub');
+  var lastTrigger = null;
+  var currentCfg = null;
+
+  var openQuick = function (kind, trigger) {
+    currentCfg = QUICK[kind];
+    lastTrigger = trigger;
+    qTitle.textContent = currentCfg.title;
+    qSub.textContent = currentCfg.sub;
+    qContactLabel.textContent = currentCfg.label;
+    qContact.type = currentCfg.inputType;
+    qContact.placeholder = currentCfg.placeholder;
+    quickForm.reset();
+    showError('q-name', 'q-name-err', '');
+    showError('q-contact', 'q-contact-err', '');
+    quickFormWrap.classList.remove('form-hidden');
+    quickDone.classList.remove('on');
+    overlay.classList.add('on');
+    setTimeout(function () { qName.focus(); }, 50);
   };
+  var closeQuick = function () {
+    overlay.classList.remove('on');
+    if (lastTrigger) { lastTrigger.focus(); }
+  };
+
   document.querySelectorAll('.foot-fake').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var value = btn.getAttribute('data-copy');
-      var label = btn.getAttribute('data-label');
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(value).then(function () {
-          showToast(label + ' скопирован — вставьте в звонилку или почту');
-        }).catch(function () {
-          fallbackCopy(value);
-          showToast(label + ' скопирован — вставьте в звонилку или почту');
-        });
-      } else {
-        fallbackCopy(value);
-        showToast(label + ' скопирован — вставьте в звонилку или почту');
-      }
-    });
+    btn.addEventListener('click', function () { openQuick(btn.getAttribute('data-modal'), btn); });
+  });
+  document.getElementById('quickClose').addEventListener('click', closeQuick);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) { closeQuick(); } });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('on')) { closeQuick(); }
+  });
+
+  quickForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (document.getElementById('q-extra').value !== '') { return; }
+
+    var name = qName.value.trim();
+    var contact = qContact.value.trim();
+    var ok = true;
+    ok = showError('q-name', 'q-name-err', name.length < 2 ? 'Напишите, как к вам обращаться' : '') && ok;
+    ok = showError('q-contact', 'q-contact-err', currentCfg.isValid(contact) ? '' : currentCfg.errText) && ok;
+    if (!ok) { return; }
+
+    quickFormWrap.classList.add('form-hidden');
+    quickDone.classList.add('on');
+    document.getElementById('quickDoneTitle').textContent = currentCfg.doneTitle;
+    document.getElementById('quickDoneText').textContent = currentCfg.doneText(name, contact);
   });
 
   var form = document.getElementById('lead-form');
